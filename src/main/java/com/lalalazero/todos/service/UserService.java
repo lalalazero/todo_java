@@ -1,6 +1,5 @@
 package com.lalalazero.todos.service;
 
-import com.lalalazero.todos.exception.TodoException;
 import com.lalalazero.todos.utils.Result;
 
 /**
@@ -8,5 +7,7 @@ import com.lalalazero.todos.utils.Result;
  */
 public interface UserService {
 
-    Result register(String username, String password) throws TodoException;
+    Result register(String username, String password);
+
+    Result login(String username, String password);
 }

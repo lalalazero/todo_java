@@ -1,8 +1,7 @@
 package com.lalalazero.todos.exception;
 
-import com.lalalazero.todos.utils.Response;
+import com.lalalazero.todos.consts.ResultEnum;
 import com.lalalazero.todos.utils.Result;
-import org.springframework.stereotype.Component;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -16,6 +15,13 @@ public class GlobalHandler {
     @ResponseBody
     @ExceptionHandler(value = TodoException.class)
     public Result handleTodo(TodoException e){
-        return Response.Error(e.getMessage());
+        return Result.Error(e.getMessage());
+    }
+
+    @ResponseBody
+    @ExceptionHandler(value = Exception.class)
+    public Result handleGlobal(Exception e){
+        System.out.println(e);
+        return Result.Error(ResultEnum.FAIL);
     }
 }
