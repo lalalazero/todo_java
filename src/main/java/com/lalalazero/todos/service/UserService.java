@@ -1,5 +1,6 @@
 package com.lalalazero.todos.service;
 
+import com.lalalazero.todos.model.User;
 import com.lalalazero.todos.utils.Result;
 
 /**
@@ -10,4 +11,6 @@ public interface UserService {
     Result register(String username, String password);
 
     Result login(String username, String password);
+
+    Boolean isExist(String username);
 }
