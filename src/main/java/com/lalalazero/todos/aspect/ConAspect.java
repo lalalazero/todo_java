@@ -1,6 +1,7 @@
 package com.lalalazero.todos.aspect;
 
 import com.lalalazero.todos.utils.JWT;
+import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
 import org.springframework.stereotype.Component;
@@ -30,9 +31,17 @@ public class ConAspect extends HandlerInterceptorAdapter {
         }
 
         String jwt = request.getHeader("token");
+        HttpServletResponse response = sra.getResponse();
+        if(StringUtils.isEmpty(jwt)){
+            try {
+                response.sendError(403);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return;
+        }
         // 验证 jwt token
         if(!JWT.getInstance().isTokenValid(jwt)){
-            HttpServletResponse response = sra.getResponse();
             try {
                 response.sendError(403);
             } catch (IOException e) {

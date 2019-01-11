@@ -27,6 +27,12 @@ public class MainController {
     @Autowired
     TodoService todoService;
 
+    @GetMapping("valid")
+    public Object valid(){
+        System.out.println("valid get mapping");
+        return true;
+    }
+
     @PostMapping("login")
     @ResponseBody
     public Object login(@RequestBody Map<String,String> body){
