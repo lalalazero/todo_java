@@ -30,7 +30,7 @@ public class MainController {
     @GetMapping("valid")
     public Object valid(){
         System.out.println("valid get mapping");
-        return true;
+        return Result.Success();
     }
 
     @PostMapping("login")
