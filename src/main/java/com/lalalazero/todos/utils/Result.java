@@ -9,13 +9,13 @@ import lombok.ToString;
  */
 @Data
 @ToString
-public class Result {
+public class Result<T> {
 
     int status;
     String msg;
-    Object data;
+    T data;
 
-    public Result(int status, String msg, Object data){
+    public Result(int status, String msg, T data){
         this.status = status;
         this.msg = msg;
         this.data = data;

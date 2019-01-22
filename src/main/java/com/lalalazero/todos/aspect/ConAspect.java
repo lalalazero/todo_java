@@ -1,9 +1,10 @@
 package com.lalalazero.todos.aspect;
 
-import com.lalalazero.todos.utils.JWT;
+import com.lalalazero.todos.service.JWT;
 import org.apache.commons.lang3.StringUtils;
 import org.aspectj.lang.annotation.Aspect;
 import org.aspectj.lang.annotation.Before;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
@@ -20,19 +21,23 @@ import java.io.IOException;
 @Component
 public class ConAspect extends HandlerInterceptorAdapter {
 
+    @Autowired
+    JWT jwt;
+
     @Before("execution(public * com.lalalazero.todos.controller.*.*(..))")
     public void before(){
         ServletRequestAttributes sra =  (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
         HttpServletRequest request = sra.getRequest();
         String methodName = request.getRequestURI();
         // 登陆和注册不做拦截
-        if(methodName.contains("/api/login") || methodName.contains("/api/register")){
+        if(methodName.contains("/api/login") || methodName.contains("/api/register") ||
+                methodName.contains("/api/valid")){
             return;
         }
 
-        String jwt = request.getHeader("token");
+        String token = request.getHeader("token");
         HttpServletResponse response = sra.getResponse();
-        if(StringUtils.isEmpty(jwt)){
+        if(StringUtils.isEmpty(token)){
             try {
                 response.sendError(403);
             } catch (IOException e) {
@@ -41,7 +46,7 @@ public class ConAspect extends HandlerInterceptorAdapter {
             return;
         }
         // 验证 jwt token
-        if(!JWT.getInstance().isTokenValid(jwt)){
+        if(!jwt.isTokenValid(token)){
             try {
                 response.sendError(403);
             } catch (IOException e) {

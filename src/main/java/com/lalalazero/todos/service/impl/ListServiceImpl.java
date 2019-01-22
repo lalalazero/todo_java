@@ -9,6 +9,7 @@ import com.lalalazero.todos.service.ListService;
 import com.lalalazero.todos.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -30,12 +31,13 @@ public class ListServiceImpl implements ListService{
     @Override
     public Result queryUserList(Integer userId) {
         List<TodoList> lists = listRepository.findByUserId(userId);
-        lists.stream().sorted(new Comparator<TodoList>() {
+        lists.sort(new Comparator<TodoList>() {
             @Override
             public int compare(TodoList o1, TodoList o2) {
                 return o1.getId() > o2.getId() ? 1 : -1;
             }
-        }).forEach(obj -> {
+        });
+        lists.forEach(obj -> {
             Integer validCount = itemRepository.queryAllByDoneAndAndListId(0,obj.getId()).size();
             obj.setValidCount(validCount);});
         return Result.Success(lists);

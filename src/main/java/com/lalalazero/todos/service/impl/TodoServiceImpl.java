@@ -7,6 +7,7 @@ import com.lalalazero.todos.service.ListService;
 import com.lalalazero.todos.service.TodoService;
 import com.lalalazero.todos.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;

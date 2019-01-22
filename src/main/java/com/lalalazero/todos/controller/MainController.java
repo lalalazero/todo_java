@@ -4,11 +4,14 @@ import com.lalalazero.todos.consts.ResultEnum;
 import com.lalalazero.todos.service.ListService;
 import com.lalalazero.todos.service.TodoService;
 import com.lalalazero.todos.service.UserService;
+import com.lalalazero.todos.service.JWT;
 import com.lalalazero.todos.utils.Result;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.Map;
 
 /**
@@ -27,10 +30,35 @@ public class MainController {
     @Autowired
     TodoService todoService;
 
+    @Autowired
+    JWT jwt;
+
+//    public static void main(String[] args) {
+//        String t = "AAAAA.BBBB.Ccccc";
+//        String B = "AA.BB.CC";
+//        String c = "ABBBBBBccc.B.c";
+//        String regex = "((\\w)*\\.){2}(\\w)*";
+//        System.out.println(t.matches(regex));
+//        System.out.println(B.matches(regex));
+//        System.out.println(c.matches(regex));
+//    }
+
     @GetMapping("valid")
-    public Object valid(){
-        System.out.println("valid get mapping");
-        return Result.Success();
+    @ResponseBody
+    public Object valid(HttpServletRequest request){
+        String token = request.getHeader("token");
+        if(StringUtils.isEmpty(token)){
+            return Result.Error("后台校验失败，token is empty");
+        }
+        if(!token.matches("(.*\\.){2}.*"))
+        {
+            System.out.println("正则校验不通过");
+            return Result.Error("正则校验不通过");
+        }
+        if(jwt.isTokenValid(token)){
+            return Result.Success();
+        };
+        return Result.Error("后台校验失败， token is not valid");
     }
 
     @PostMapping("login")

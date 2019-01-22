@@ -1,16 +1,22 @@
-package com.lalalazero.todos.utils;
+package com.lalalazero.todos.service;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.lalalazero.todos.service.UserService;
+import com.lalalazero.todos.utils.AES;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 /**
  * @Date 2019/1/8 下午5:22
  */
+@Service
 public class JWT {
+
+    @Autowired
+    UserService userService;
+
 
 //    jwt = header.payload.signature
 //    data = base64urlEncode( header ) + “.” + base64urlEncode( payload )
@@ -20,15 +26,6 @@ public class JWT {
     private static String myKey = "lalalazero";
     private static String header = "{\"typ\":\"JWT\",\"alg\":\"AES\"}";
     private static String payload = "{\"username\": \"temp\"}";
-
-    @Autowired
-    UserService userService;
-
-    public static JWT instance = new JWT();
-
-    public static JWT getInstance(){
-        return instance;
-    }
 
     public String newToken(String username){
         String headerEncoded = base64UrlEncode(header);
@@ -88,20 +85,20 @@ public class JWT {
         return new String(Base64.getUrlDecoder().decode(data),StandardCharsets.UTF_8);
     }
 
-    public static void main(String[] args){
-        JWT instance = JWT.getInstance();
-        String jwt = instance.newToken("lalala");
-        System.out.println("jwt: " + jwt);
-        System.out.println(instance.isTokenValid(jwt,"lalala"));
-
-    }
-
-    public static void testBase64(String test){
-        JWT instance = JWT.getInstance();
-        System.out.println("原字符串: " + test);
-        String a = instance.base64UrlEncode(test);
-        System.out.println("base64编码后: " + a);
-        String b = instance.base64UrlDecode(a);
-        System.out.println("base64解码后: " + b);
-    }
+//    public static void main(String[] args){
+//        JWT instance = JWT.getInstance();
+//        String jwt = instance.newToken("lalala");
+//        System.out.println("jwt: " + jwt);
+//        System.out.println(instance.isTokenValid(jwt,"lalala"));
+//
+//    }
+//
+//    public static void testBase64(String test){
+//        JWT instance = JWT.getInstance();
+//        System.out.println("原字符串: " + test);
+//        String a = instance.base64UrlEncode(test);
+//        System.out.println("base64编码后: " + a);
+//        String b = instance.base64UrlDecode(a);
+//        System.out.println("base64解码后: " + b);
+//    }
 }

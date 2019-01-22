@@ -5,13 +5,14 @@ import com.lalalazero.todos.model.User;
 import com.lalalazero.todos.dao.UserRepository;
 import com.lalalazero.todos.service.ListService;
 import com.lalalazero.todos.service.UserService;
-import com.lalalazero.todos.utils.JWT;
+import com.lalalazero.todos.service.JWT;
 import com.lalalazero.todos.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @Date 2018/12/24 上午9:28
@@ -23,16 +24,23 @@ public class UserServiceImpl implements UserService {
     UserRepository userRepository;
     @Autowired
     ListService listService;
+    @Autowired
+    JWT jwt;
 
 
     @Override
     @Transactional
     public Result register(String username, String password){
-        if(isNameUnique(username)){
+        if(!isExist(username)){
             User user = new User(username, password);
             userRepository.save(user);
             listService.createList("计划",user.getId(),0);
-            return Result.Success(JWT.instance.newToken(username));
+            listService.createList("今天",user.getId(),0);
+            listService.createList("星标",user.getId(),0);
+            Map<String,Object> res = new HashMap<>();
+            res.put("token",jwt.newToken(username));
+            res.put("userId",user.getId());
+            return Result.Success(res);
         }
         return Result.Error(ResultEnum.USERNAME_NOT_UNIQUE);
 
@@ -41,11 +49,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public Result login(String username, String password) {
 
-        List<User> list = userRepository.findByUsernameEquals(username);
-        if(list.size() > 0){
-            User user = list.get(0);
+        User user = userRepository.findUserByUsername(username);
+        if(user != null){
             if(password.equals(user.getPassword())){
-                return  Result.Success(JWT.instance.newToken(username));
+                Map<String,Object> res = new HashMap<>();
+                res.put("token",jwt.newToken(username));
+                res.put("userId",user.getId());
+                return  Result.Success(res);
             }
             return Result.Error(ResultEnum.WRONG_PASS);
         }
@@ -55,12 +65,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Boolean isExist(String username) {
-        return userRepository.findByUsernameEquals(username).size() > 0 ? true : false;
-    }
-
-
-    private boolean isNameUnique(String username){
-        return userRepository.findByUsernameEquals(username).size() > 0 ? false : true;
+        return userRepository.findUserByUsername(username) == null ? false : true;
     }
 
 

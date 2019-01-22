@@ -11,6 +11,6 @@ import java.util.List;
  */
 public interface UserRepository extends JpaRepository<User,Integer>, JpaSpecificationExecutor<User>{
 
-    List<User> findByUsernameEquals(String userName);
+    User findUserByUsername(String userName);
 
 }
