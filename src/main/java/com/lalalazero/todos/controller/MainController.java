@@ -12,6 +12,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -33,7 +34,7 @@ public class MainController {
     @Autowired
     JWT jwt;
 
-//    public static void main(String[] args) {
+    public static void main(String[] args) {
 //        String t = "AAAAA.BBBB.Ccccc";
 //        String B = "AA.BB.CC";
 //        String c = "ABBBBBBccc.B.c";
@@ -41,7 +42,10 @@ public class MainController {
 //        System.out.println(t.matches(regex));
 //        System.out.println(B.matches(regex));
 //        System.out.println(c.matches(regex));
-//    }
+
+        String s = "1548857264120";
+        System.out.println(new Date(s));
+    }
 
     @GetMapping("valid")
     @ResponseBody
@@ -117,10 +121,17 @@ public class MainController {
         return todoService.queryDetail(itemId);
     }
 
+
+
     @PostMapping("lists/items")
     @ResponseBody
-    public Object createTodo(@RequestParam("id") Integer listId, @RequestParam("value") String value){
-        return todoService.add(value, listId);
+    public Object createTodo(@RequestBody Map<String,Object> body){
+        Integer listId = Integer.parseInt(body.get("listId").toString());
+        String value = body.get("value").toString();
+        Integer marked = (Integer)body.get("marked");
+        String due = (String)body.get("due");
+        Date date = new Date(Long.parseLong(due));
+        return todoService.add(value,marked,date,listId);
     }
 
     @PutMapping("lists/items/status")

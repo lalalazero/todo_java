@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Date;
 import java.util.NoSuchElementException;
 
 /**
@@ -27,9 +28,9 @@ public class TodoServiceImpl implements TodoService{
 
     @Override
     @Transactional
-    public Result add(String value, Integer listId) {
+    public Result add(String value, Integer marked, Date due, Integer listId) {
         if(listService.isListExist(listId)){
-            TodoItem todo = new TodoItem(value,listId);
+            TodoItem todo = new TodoItem(value, marked, due, listId);
             todoItemRepository.save(todo);
             return Result.Success();
         }else{

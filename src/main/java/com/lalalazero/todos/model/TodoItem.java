@@ -33,8 +33,10 @@ public class TodoItem {
 
     }
 
-    public TodoItem(String value, Integer listId){
+    public TodoItem(String value, Integer marked, Date due, Integer listId){
         this.value = value;
         this.listId = listId;
+        this.star = marked;
+        this.due = due;
     }
 }
