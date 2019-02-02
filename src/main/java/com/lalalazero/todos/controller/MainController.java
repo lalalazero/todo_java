@@ -1,6 +1,9 @@
 package com.lalalazero.todos.controller;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.lalalazero.todos.consts.ResultEnum;
+import com.lalalazero.todos.model.dto.TodoDTO;
 import com.lalalazero.todos.service.ListService;
 import com.lalalazero.todos.service.TodoService;
 import com.lalalazero.todos.service.UserService;
@@ -125,13 +128,17 @@ public class MainController {
 
     @PostMapping("lists/items")
     @ResponseBody
-    public Object createTodo(@RequestBody Map<String,Object> body){
-        Integer listId = Integer.parseInt(body.get("listId").toString());
-        String value = body.get("value").toString();
-        Integer marked = (Integer)body.get("marked");
-        String due = (String)body.get("due");
-        Date date = new Date(Long.parseLong(due));
-        return todoService.add(value,marked,date,listId);
+    public Object createTodo(@RequestBody Map<String, Object> body){
+        JSONObject json = new JSONObject(body);
+        Integer listId = (Integer)json.get("id");
+        TodoDTO todo = JSON.parseObject(JSON.toJSONString(json.get("todo")), TodoDTO.class);
+        if(todo.getDue() == null){
+            return todoService.add(todo.getValue(), todo.getMarked(), null, listId);
+        }else{
+            return todoService.add(todo.getValue(), todo.getMarked(),
+                    new Date(todo.getDue()), listId);
+        }
+
     }
 
     @PutMapping("lists/items/status")
