@@ -141,6 +141,12 @@ public class MainController {
 
     }
 
+    @PutMapping("lists/items/star")
+    @ResponseBody
+    public Object markStar(@RequestParam("id") Integer todoId, @RequestParam("stared") Integer stared){
+        return todoService.markStar(todoId, stared);
+    }
+
     @PutMapping("lists/items/status")
     @ResponseBody
     public Object checkItem(@RequestParam("id") Integer todoId,@RequestParam("status") Integer status){

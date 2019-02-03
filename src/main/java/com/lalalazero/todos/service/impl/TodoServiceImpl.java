@@ -73,6 +73,10 @@ public class TodoServiceImpl implements TodoService{
         try{
             TodoItem todo = todoItemRepository.findById(todoId).get();
             todo.setDone(status);
+            if(status == 1){
+                // 标记完成时间
+                todo.setFinished(new Date());
+            }
             todoItemRepository.save(todo);
             return Result.Success();
         }catch (NoSuchElementException e){
@@ -88,6 +92,23 @@ public class TodoServiceImpl implements TodoService{
             return Result.Error(ResultEnum.NON_TODO_EXIST);
         }
     }
+
+    @Override
+    @Transactional
+    public Result markStar(Integer todoId, Integer stared) {
+        try{
+            TodoItem todo = todoItemRepository.findById(todoId).get();
+            todo.setStar(stared);
+            todoItemRepository.save(todo);
+            return Result.Success();
+        }catch (NoSuchElementException e){
+            return Result.Error(ResultEnum.NON_TODO_EXIST);
+        }
+
+    }
+
+
+
 
 
 }

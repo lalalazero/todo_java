@@ -20,4 +20,6 @@ public interface TodoService {
     Result check(Integer todoId,Integer status);
 
     Result queryDetail(Integer todoId);
+
+    Result markStar(Integer todoId, Integer stared);
 }
