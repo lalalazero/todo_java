@@ -14,4 +14,6 @@ public interface TodoItemRepository extends JpaRepository<TodoItem,Integer>, Jpa
     List<TodoItem> queryAllByDoneAndAndListId(Integer done, Integer listId);
 
     void deleteAllByListId(Integer listId);
+
+    List<TodoItem> findAllByDoneAndStarAndListId(Integer done, Integer mark, Integer listId);
 }

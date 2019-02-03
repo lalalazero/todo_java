@@ -13,6 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -94,12 +95,36 @@ public class ListServiceImpl implements ListService{
 
     @Override
     public Result queryListTodos(Integer listId, Integer type) {
+        try {
+            TodoList list = listRepository.findById(listId).get();
+            if("今天".equals(list.getName())){
+                return queryByToday(list.getUserId(), type);
+            }else if("星标".equals(list.getName())){
+                return queryByStar(list.getUserId(), type);
+            }
+        }catch (NoSuchElementException e){
+            return Result.Error(ResultEnum.LIST_NON_EXIST);
+        }
         return Result.Success(itemRepository.queryAllByDoneAndAndListId(type, listId).stream().sorted(new Comparator<TodoItem>() {
             @Override
             public int compare(TodoItem o1, TodoItem o2) {
                 return o1.getId() > o2.getId() ? 1 : -1;
             }
         }));
+    }
+
+    private Result queryByStar(Integer userId, Integer type) {
+        List<TodoList> lists = listRepository.findByUserId(userId);
+        List<TodoItem> items = new ArrayList<>();
+        lists.forEach(obj -> {
+            items.addAll(itemRepository.findAllByDoneAndStarAndListId(type, 1, obj.getId()));
+        });
+        return Result.Success(items);
+//        return Result.Error(ResultEnum.FAIL);
+    }
+
+    private Result queryByToday(Integer userId, Integer type) {
+        return Result.Error(ResultEnum.FAIL);
     }
 
 
