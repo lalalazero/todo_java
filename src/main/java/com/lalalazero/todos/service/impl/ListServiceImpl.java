@@ -13,10 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.NoSuchElementException;
+import java.util.*;
 
 /**
  * @Date 2018/12/24 下午3:59
@@ -120,11 +117,17 @@ public class ListServiceImpl implements ListService{
             items.addAll(itemRepository.findAllByDoneAndStarAndListId(type, 1, obj.getId()));
         });
         return Result.Success(items);
-//        return Result.Error(ResultEnum.FAIL);
     }
 
     private Result queryByToday(Integer userId, Integer type) {
-        return Result.Error(ResultEnum.FAIL);
+        Calendar canlendar = Calendar.getInstance();
+        canlendar.set(Calendar.MINUTE, 0);
+        canlendar.set(Calendar.SECOND, 0);
+        canlendar.set(Calendar.HOUR_OF_DAY, 0);
+        Date start = canlendar.getTime();
+        canlendar.set(Calendar.HOUR_OF_DAY, 24);
+        Date end = canlendar.getTime();
+        return Result.Success(itemRepository.findAllByDueLessThanEqualAndDueGreaterThanEqual(end, start));
     }
 
 

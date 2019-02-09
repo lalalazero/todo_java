@@ -4,6 +4,7 @@ import com.lalalazero.todos.model.TodoItem;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -16,4 +17,8 @@ public interface TodoItemRepository extends JpaRepository<TodoItem,Integer>, Jpa
     void deleteAllByListId(Integer listId);
 
     List<TodoItem> findAllByDoneAndStarAndListId(Integer done, Integer mark, Integer listId);
+
+    //List<TodoItem> findAllByDueIsBetweenAndDoneAndListId()
+
+    List<TodoItem> findAllByDueLessThanEqualAndDueGreaterThanEqual(Date end, Date start);
 }
