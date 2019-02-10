@@ -9,11 +9,12 @@ import com.lalalazero.todos.service.ListService;
 import com.lalalazero.todos.utils.Result;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.*;
+
+import static java.util.stream.Collectors.toList;
 
 /**
  * @Date 2018/12/24 下午3:59
@@ -120,6 +121,8 @@ public class ListServiceImpl implements ListService{
     }
 
     private Result queryByToday(Integer userId, Integer type) {
+        List<TodoList> todoLists = listRepository.findByUserId(userId);
+        List<Integer> listIds = todoLists.stream().map(TodoList::getId).collect(toList());
         Calendar canlendar = Calendar.getInstance();
         canlendar.set(Calendar.MINUTE, 0);
         canlendar.set(Calendar.SECOND, 0);
@@ -127,7 +130,7 @@ public class ListServiceImpl implements ListService{
         Date start = canlendar.getTime();
         canlendar.set(Calendar.HOUR_OF_DAY, 24);
         Date end = canlendar.getTime();
-        return Result.Success(itemRepository.findAllByDueLessThanEqualAndDueGreaterThanEqual(end, start));
+        return Result.Success(itemRepository.findAllByDueLessThanEqualAndDueGreaterThanEqualAndDoneAndListIdIn(end, start, type, listIds));
     }
 
 

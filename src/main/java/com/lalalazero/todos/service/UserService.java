@@ -16,4 +16,6 @@ public interface UserService {
     Result login(String username, String password);
 
     Boolean isExist(String username);
+
+    Result userInfo(Integer userId);
 }

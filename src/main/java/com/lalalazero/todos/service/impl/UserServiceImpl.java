@@ -3,6 +3,7 @@ package com.lalalazero.todos.service.impl;
 import com.lalalazero.todos.consts.ResultEnum;
 import com.lalalazero.todos.model.User;
 import com.lalalazero.todos.dao.UserRepository;
+import com.lalalazero.todos.model.dto.UserDTO;
 import com.lalalazero.todos.service.ListService;
 import com.lalalazero.todos.service.UserService;
 import com.lalalazero.todos.service.JWT;
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.NoSuchElementException;
 
 /**
  * @Date 2018/12/24 上午9:28
@@ -39,7 +41,8 @@ public class UserServiceImpl implements UserService {
             listService.createList("星标",user.getId(),0);
             Map<String,Object> res = new HashMap<>();
             res.put("token",jwt.newToken(username));
-            res.put("userId",user.getId());
+            UserDTO dto = new UserDTO(user.getId(), user.getUsername(), user.getHeaderImg());
+            res.put("user", dto);
             return Result.Success(res);
         }
         return Result.Error(ResultEnum.USERNAME_NOT_UNIQUE);
@@ -54,7 +57,8 @@ public class UserServiceImpl implements UserService {
             if(password.equals(user.getPassword())){
                 Map<String,Object> res = new HashMap<>();
                 res.put("token",jwt.newToken(username));
-                res.put("userId",user.getId());
+                UserDTO dto = new UserDTO(user.getId(), user.getUsername(), user.getHeaderImg());
+                res.put("user", dto);
                 return  Result.Success(res);
             }
             return Result.Error(ResultEnum.WRONG_PASS);
@@ -66,6 +70,17 @@ public class UserServiceImpl implements UserService {
     @Override
     public Boolean isExist(String username) {
         return userRepository.findUserByUsername(username) == null ? false : true;
+    }
+
+    @Override
+    public Result userInfo(Integer userId) {
+        try {
+            User user = userRepository.findById(userId).get();
+            return Result.Success(new UserDTO(user.getId(),user.getUsername(), user.getHeaderImg()));
+        }catch (NoSuchElementException e){
+            return Result.Error(ResultEnum.USER_NON_EXIST);
+        }
+
     }
 
 

@@ -31,7 +31,7 @@ public class ConAspect extends HandlerInterceptorAdapter {
         String methodName = request.getRequestURI();
         // 登陆和注册不做拦截
         if(methodName.contains("/api/login") || methodName.contains("/api/register") ||
-                methodName.contains("/api/valid")){
+                methodName.contains("/api/autoLogin")){
             return;
         }
 

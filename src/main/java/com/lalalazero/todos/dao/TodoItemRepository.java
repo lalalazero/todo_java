@@ -1,6 +1,7 @@
 package com.lalalazero.todos.dao;
 
 import com.lalalazero.todos.model.TodoItem;
+import com.sun.tools.javac.comp.Todo;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
@@ -18,7 +19,11 @@ public interface TodoItemRepository extends JpaRepository<TodoItem,Integer>, Jpa
 
     List<TodoItem> findAllByDoneAndStarAndListId(Integer done, Integer mark, Integer listId);
 
-    //List<TodoItem> findAllByDueIsBetweenAndDoneAndListId()
+    List<TodoItem> findAllByDueLessThanEqualAndDueGreaterThanEqualAndDoneAndListIdIn(Date end, Date start, Integer done, List<Integer> listIds);
 
-    List<TodoItem> findAllByDueLessThanEqualAndDueGreaterThanEqual(Date end, Date start);
+    List<TodoItem> findAllByListIdIn(List<Integer> listIds);
+
+//    List<TodoItem> findAllByDoneAndListIdIn(Integer done, List<Integer> listIds);
+
+//    List<TodoItem> findAllByDueLessThanEqualAndDueGreaterThanEqual(Date end, Date start);
 }

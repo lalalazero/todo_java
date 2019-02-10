@@ -1,8 +1,10 @@
 package com.lalalazero.todos.service.impl;
 
 import com.lalalazero.todos.consts.ResultEnum;
+import com.lalalazero.todos.dao.TodoListRepository;
 import com.lalalazero.todos.model.TodoItem;
 import com.lalalazero.todos.dao.TodoItemRepository;
+import com.lalalazero.todos.model.TodoList;
 import com.lalalazero.todos.service.ListService;
 import com.lalalazero.todos.service.TodoService;
 import com.lalalazero.todos.utils.Result;
@@ -26,9 +28,15 @@ public class TodoServiceImpl implements TodoService{
     @Autowired
     TodoItemRepository todoItemRepository;
 
+    @Autowired
+    TodoListRepository listRepository;
+
     @Override
     @Transactional
     public Result add(String value, Integer marked, Date due, Integer listId) {
+        if(due != null){
+            due.setTime(due.getTime() + 1000); // 避免卡在 00:00:00
+        }
         if(listService.isListExist(listId)){
             TodoItem todo = new TodoItem(value, marked, due, listId);
             todoItemRepository.save(todo);

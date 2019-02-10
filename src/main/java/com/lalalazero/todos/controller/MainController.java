@@ -15,6 +15,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -50,7 +51,7 @@ public class MainController {
         System.out.println(new Date(s));
     }
 
-    @GetMapping("valid")
+    @GetMapping("autoLogin")
     @ResponseBody
     public Object valid(HttpServletRequest request){
         String token = request.getHeader("token");
@@ -74,6 +75,12 @@ public class MainController {
         String userName = body.get("username");
         String password = body.get("password");
         return userService.login(userName, password);
+    }
+
+    @PostMapping("userInfo")
+    @ResponseBody
+    public Object userInfo(@RequestBody Map<String, Integer> body){
+        return userService.userInfo(body.get("userid"));
     }
 
     @PostMapping("register")

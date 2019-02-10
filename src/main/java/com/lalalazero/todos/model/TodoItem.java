@@ -1,5 +1,6 @@
 package com.lalalazero.todos.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.ToString;
 
@@ -26,7 +27,11 @@ public class TodoItem {
     String value;
     Integer listId;
     Integer star = 0; // 0-没有星标 1-星标
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     Date due; // 截止时间
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     Date finished; // 完成时间
 
     public TodoItem(){
