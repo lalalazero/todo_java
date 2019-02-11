@@ -19,8 +19,8 @@ import java.util.*;
 
 import static java.util.stream.Collectors.toList;
 
-@RunWith(SpringRunner.class)
-@SpringBootTest
+//@RunWith(SpringRunner.class)
+//@SpringBootTest
 public class TodosApplicationTests {
 
 	@Autowired
@@ -32,7 +32,7 @@ public class TodosApplicationTests {
 	@Autowired
 	TodoListRepository listRepository;
 
-	@Test
+//	@Test
 	public void contextLoads() {
 //		Map<String,Object> res = new HashMap<>();
 //		res.put("token","12345");

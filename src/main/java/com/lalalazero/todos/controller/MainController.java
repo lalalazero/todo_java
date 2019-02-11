@@ -15,7 +15,6 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -23,7 +22,7 @@ import java.util.Map;
  * @Date 2018/12/22 上午11:26
  */
 @Controller
-@RequestMapping("api")
+@RequestMapping("/todo/api")
 public class MainController {
 
     @Autowired
